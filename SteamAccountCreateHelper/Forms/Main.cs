@@ -25,6 +25,7 @@ namespace SteamAccountCreateHelper
         public static Main _Form1;
 
         public static string Database_Path = AppDomain.CurrentDomain.BaseDirectory + "Database\\";
+        public static string LoginAndPass = Database_Path + "LoginAndPass.txt";
         public static string Used_Mail_DB_Path = Database_Path + "Used_Email_DB.json";
         public static string CreationidDB_Path = Database_Path + "CreationID_DB.json";
         public static string Pop3Domains_Path = Database_Path + "Pop3Domains.json";
@@ -102,6 +103,11 @@ namespace SteamAccountCreateHelper
                     List<Pop3> pop3 = new List<Pop3>();
                     File.WriteAllText(Pop3Domains_Path, JsonConvert.SerializeObject(pop3, Formatting.Indented));
                 }
+            }
+
+            if (!File.Exists(LoginAndPass))
+            {
+                File.Create(LoginAndPass);
             }
 
             #endregion
@@ -363,6 +369,8 @@ namespace SteamAccountCreateHelper
                 Thread th = new Thread(() => Customize_profile.Login_An_Customize(path_to_save, login, pass));
                 th.IsBackground = true;
                 th.Start();
+
+                File.AppendAllText(Path.Combine(LoginAndPass), login + ":" + pass + "\n");
 
                 Main._Form1.lbl_Email.Text = "";
                 Main._Form1.lbl_EmailPass.Text = "";
